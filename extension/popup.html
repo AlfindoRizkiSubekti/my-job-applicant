@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Application Tracker</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>🎯 Job Tracker</h1>
+      <p class="subtitle">Track lamaran kerja Anda</p>
+    </header>
+    
+    <div class="stats">
+      <div class="stat-item">
+        <span class="stat-number" id="totalApplications">0</span>
+        <span class="stat-label">Total Lamaran</span>
+      </div>
+    </div>
+    
+    <div class="actions">
+      <button id="refreshBtn" class="btn btn-primary">
+        🔄 Refresh Data
+      </button>
+      <button id="exportBtn" class="btn btn-secondary">
+        📥 Export CSV
+      </button>
+      <button id="clearAllBtn" class="btn btn-danger">
+        🗑️ Hapus Semua
+      </button>
+    </div>
+    
+    <div class="search-container">
+      <input type="text" id="searchInput" placeholder="Cari perusahaan atau posisi..." class="search-input">
+    </div>
+    
+    <div class="applications-list" id="applicationsList">
+      <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <p>Memuat data...</p>
+      </div>
+    </div>
+    
+    <div class="empty-state" id="emptyState" style="display: none;">
+      <div class="empty-icon">📝</div>
+      <h3>Belum ada lamaran tersimpan</h3>
+      <p>Kunjungi halaman Jobstreet dan klik tombol simpan untuk mulai tracking lamaran Anda!</p>
+    </div>
+    
+    <footer class="footer">
+      <p>v1.0 | Auto tracker untuk Jobstreet Indonesia</p>
+    </footer>
+  </div>
+  
+  <!-- Modal Konfirmasi -->
+  <div id="confirmModal" class="modal">
+    <div class="modal-content">
+      <h3>Konfirmasi</h3>
+      <p id="confirmMessage">Apakah Anda yakin?</p>
+      <div class="modal-actions">
+        <button id="confirmYes" class="btn btn-danger">Ya</button>
+        <button id="confirmNo" class="btn btn-secondary">Tidak</button>
+      </div>
+    </div>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>

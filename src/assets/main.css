@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Test styles to verify Tailwind is working */
+.test-tailwind {
+  @apply text-red-500 font-bold;
+}

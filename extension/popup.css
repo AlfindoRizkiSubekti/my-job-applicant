@@ -1,0 +1,418 @@
+/* Popup CSS untuk Job Application Auto Tracker */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  width: 400px;
+  min-height: 500px;
+  max-height: 600px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #333;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #fff;
+  margin: 8px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+  background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+.header h1 {
+  font-size: 20px;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+.subtitle {
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+.stats {
+  padding: 16px 20px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-number {
+  display: block;
+  font-size: 24px;
+  font-weight: bold;
+  color: #FF6B35;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #6c757d;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.actions {
+  padding: 16px 20px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.btn {
+  border: none;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.btn-primary {
+  background: #FF6B35;
+  color: white;
+  flex: 1;
+}
+
+.btn-primary:hover {
+  background: #E55A2B;
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: #6c757d;
+  color: white;
+  flex: 1;
+}
+
+.btn-secondary:hover {
+  background: #5a6268;
+  transform: translateY(-1px);
+}
+
+.btn-danger {
+  background: #dc3545;
+  color: white;
+  flex: 1;
+}
+
+.btn-danger:hover {
+  background: #c82333;
+  transform: translateY(-1px);
+}
+
+.search-container {
+  padding: 16px 20px 0;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid #e9ecef;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #FF6B35;
+}
+
+.applications-list {
+  flex: 1;
+  padding: 16px 20px;
+  overflow-y: auto;
+}
+
+.application-item {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-left: 4px solid #FF6B35;
+  transition: all 0.2s ease;
+}
+
+.application-item:hover {
+  background: #e9ecef;
+  transform: translateX(2px);
+}
+
+.app-header {
+  display: flex;
+  justify-content: between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.app-title {
+  font-weight: 600;
+  font-size: 14px;
+  color: #2c3e50;
+  margin-bottom: 2px;
+  line-height: 1.2;
+  flex: 1;
+}
+
+.app-company {
+  font-size: 12px;
+  color: #FF6B35;
+  font-weight: 500;
+}
+
+.app-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.app-location {
+  font-size: 11px;
+  color: #6c757d;
+  display: flex;
+  align-items: center;
+}
+
+.app-date {
+  font-size: 10px;
+  color: #6c757d;
+  opacity: 0.8;
+}
+
+.app-actions {
+  display: flex;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.btn-small {
+  padding: 4px 8px;
+  font-size: 10px;
+  border-radius: 4px;
+}
+
+.btn-link {
+  background: none;
+  border: 1px solid #6c757d;
+  color: #6c757d;
+}
+
+.btn-link:hover {
+  background: #6c757d;
+  color: white;
+}
+
+.btn-delete {
+  background: none;
+  border: 1px solid #dc3545;
+  color: #dc3545;
+}
+
+.btn-delete:hover {
+  background: #dc3545;
+  color: white;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.spinner {
+  width: 30px;
+  height: 30px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #FF6B35;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 10px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.empty-state h3 {
+  color: #2c3e50;
+  margin-bottom: 8px;
+  font-size: 16px;
+}
+
+.empty-state p {
+  color: #6c757d;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.footer {
+  background: #f8f9fa;
+  padding: 12px 20px;
+  text-align: center;
+  border-top: 1px solid #e9ecef;
+}
+
+.footer p {
+  font-size: 10px;
+  color: #6c757d;
+  margin: 0;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 12px;
+  font-size: 9px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-left: 4px;
+}
+
+.status-applied {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-interview {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status-rejected {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.status-hired {
+  background: #d1ecf1;
+  color: #0c5460;
+}
+
+/* Modal styles */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  background-color: white;
+  margin: 50% auto;
+  padding: 20px;
+  border-radius: 8px;
+  width: 280px;
+  text-align: center;
+  transform: translateY(-50%);
+}
+
+.modal-content h3 {
+  margin-bottom: 12px;
+  color: #2c3e50;
+}
+
+.modal-content p {
+  margin-bottom: 20px;
+  color: #6c757d;
+  font-size: 14px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.modal-actions .btn {
+  min-width: 80px;
+}
+
+/* Scrollbar styling */
+.applications-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.applications-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.applications-list::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 2px;
+}
+
+.applications-list::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Styling untuk data yang perlu update */
+.application-item.needs-update {
+  border-left-color: #ffc107;
+  background: #fff3cd;
+}
+
+.application-item.needs-update:hover {
+  background: #ffeaa7;
+}
+
+.update-notice {
+  font-size: 10px;
+  color: #856404;
+  background: #fff3cd;
+  padding: 4px 8px;
+  border-radius: 4px;
+  margin-top: 8px;
+  border: 1px solid #ffeaa7;
+}
+
+/* Responsive adjustments */
+@media (max-width: 400px) {
+  body {
+    width: 350px;
+  }
+  
+  .actions {
+    flex-direction: column;
+  }
+  
+  .btn {
+    width: 100%;
+  }
+}
