@@ -1,22 +1,30 @@
 {
   "manifest_version": 3,
   "name": "Job Application Auto Tracker",
-  "version": "1.0",
-  "description": "Automatically track job applications from Jobstreet Indonesia",
+  "version": "2.0",
+  "description": "Automatically track job applications from Jobstreet Indonesia and LinkedIn",
   "permissions": [
     "storage",
     "activeTab",
     "scripting"
   ],
   "host_permissions": [
-    "https://id.jobstreet.com/*"
+    "https://id.jobstreet.com/*",
+    "https://www.linkedin.com/*"
   ],
   "content_scripts": [
     {
       "matches": [
         "https://id.jobstreet.com/*"
       ],
-      "js": ["content.js"],
+      "js": ["content-jobstreet.js"],
+      "run_at": "document_end"
+    },
+    {
+      "matches": [
+        "https://www.linkedin.com/jobs/*"
+      ],
+      "js": ["content-linkedin.js"],
       "run_at": "document_end"
     }
   ],

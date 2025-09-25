@@ -1,5 +1,5 @@
 // Content script untuk mengekstrak informasi lamaran kerja dari Jobstreet
-console.log('Job Application Auto Tracker: Content script loaded');
+console.log('Job Application Auto Tracker: Jobstreet content script loaded');
 
 // Fungsi untuk mengekstrak data pekerjaan dari halaman detail job
 function extractJobData() {
@@ -13,6 +13,7 @@ function extractJobData() {
     description: '',
     requirements: '',
     url: '',
+    platform: 'jobstreet',
     appliedDate: new Date().toISOString(),
     status: 'applied'
   };
@@ -105,17 +106,17 @@ function saveJobData(jobData) {
   });
 }
 
-// Fungsi untuk menampilkan notifikasi
+// Fungsi untuk menampilkan notifikasi dengan styling Jobstreet
 function showNotification(message, type = 'info') {
   // Hapus notifikasi yang ada
-  const existingNotification = document.getElementById('job-tracker-notification');
+  const existingNotification = document.getElementById('jobstreet-job-tracker-notification');
   if (existingNotification) {
     existingNotification.remove();
   }
 
   // Buat notifikasi baru
   const notification = document.createElement('div');
-  notification.id = 'job-tracker-notification';
+  notification.id = 'jobstreet-job-tracker-notification';
   
   let backgroundColor;
   switch(type) {
@@ -136,19 +137,41 @@ function showNotification(message, type = 'info') {
     position: fixed;
     top: 20px;
     right: 20px;
-    padding: 15px 20px;
+    padding: 16px 20px;
     background-color: ${backgroundColor};
     color: white;
-    border-radius: 5px;
+    border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     z-index: 10000;
     font-family: Arial, sans-serif;
     font-size: 14px;
+    font-weight: 500;
     max-width: 300px;
     transition: all 0.3s ease;
     line-height: 1.4;
+    border-left: 4px solid rgba(255, 255, 255, 0.3);
   `;
-  notification.textContent = message;
+  
+  // Add Jobstreet branding indicator
+  const brandIndicator = document.createElement('div');
+  brandIndicator.style.cssText = `
+    display: inline-block;
+    background-color: #FF6B35;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: bold;
+    margin-right: 8px;
+    vertical-align: middle;
+  `;
+  brandIndicator.textContent = 'JOBSTREET';
+  
+  const messageSpan = document.createElement('span');
+  messageSpan.textContent = message;
+  
+  notification.appendChild(brandIndicator);
+  notification.appendChild(messageSpan);
 
   document.body.appendChild(notification);
 
@@ -213,6 +236,7 @@ async function fetchJobDataFromUrl(jobUrl) {
       salary: '',
       jobType: '',
       url: jobUrl,
+      platform: 'jobstreet',
       appliedDate: new Date().toISOString(),
       status: 'applied'
     };
@@ -292,12 +316,12 @@ async function fetchJobDataFromUrl(jobUrl) {
 // Fungsi untuk menambahkan tombol manual save
 function addManualSaveButton() {
   // Cek apakah tombol sudah ada
-  if (document.getElementById('manual-save-job-btn')) {
+  if (document.getElementById('jobstreet-manual-save-job-btn')) {
     return;
   }
 
   const button = document.createElement('button');
-  button.id = 'manual-save-job-btn';
+  button.id = 'jobstreet-manual-save-job-btn';
   button.innerHTML = '💾 Simpan Data Lamaran';
   button.style.cssText = `
     position: fixed;
@@ -341,6 +365,70 @@ function addManualSaveButton() {
   document.body.appendChild(button);
 }
 
+// Fungsi untuk menambahkan indikator website Jobstreet
+function addJobstreetWebsiteIndicator() {
+  // Hapus indikator yang ada
+  const existingIndicator = document.getElementById('jobstreet-website-detector-indicator');
+  if (existingIndicator) {
+    existingIndicator.remove();
+  }
+
+  const indicator = document.createElement('div');
+  indicator.id = 'jobstreet-website-detector-indicator';
+  indicator.innerHTML = `
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <div style="width: 8px; height: 8px; background-color: #FF6B35; border-radius: 50%; animation: pulse 2s infinite;"></div>
+      <span style="font-weight: bold;">JobStreet Tracker Active</span>
+    </div>
+  `;
+  
+  indicator.style.cssText = `
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    padding: 8px 16px;
+    background-color: rgba(255, 107, 53, 0.95);
+    color: white;
+    border-radius: 20px;
+    z-index: 9999;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  `;
+
+  // Add CSS animation (if not already added)
+  if (!document.getElementById('pulse-animation-style')) {
+    const style = document.createElement('style');
+    style.id = 'pulse-animation-style';
+    style.textContent = `
+      @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.5; }
+        100% { opacity: 1; }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  document.body.appendChild(indicator);
+
+  // Auto-hide after 3 seconds
+  setTimeout(() => {
+    if (indicator.parentNode) {
+      indicator.style.opacity = '0';
+      indicator.style.transform = 'translateX(-100%)';
+      setTimeout(() => {
+        if (indicator.parentNode) {
+          indicator.remove();
+        }
+      }, 300);
+    }
+  }, 3000);
+}
+
 // Fungsi untuk mendapatkan URL job yang bersih dari halaman success
 function getCleanJobUrl() {
   const currentUrl = window.location.href;
@@ -357,8 +445,11 @@ function getCleanJobUrl() {
 async function autoDetectAndExtract() {
   const pageType = detectPageType();
   
+  // Tambahkan indikator website
+  setTimeout(addJobstreetWebsiteIndicator, 500);
+  
   if (pageType === 'success') {
-    console.log('Success page detected');
+    console.log('Jobstreet success page detected');
     
     setTimeout(async () => {
       // Coba ekstrak dari halaman success terlebih dahulu
@@ -425,10 +516,10 @@ async function checkAndUpdateJobData(jobId) {
       action: 'getJobApplications'
     }, async (response) => {
       if (response && response.success) {
-        const existingJob = response.data.find(job => job.id === jobId);
+        const existingJob = response.data.find(job => job.id === jobId && job.platform === 'jobstreet');
         
         if (existingJob && existingJob.needsUpdate) {
-          console.log('Found incomplete job data, updating...');
+          console.log('Found incomplete Jobstreet job data, updating...');
           
           // Tunggu sebentar untuk DOM fully load
           setTimeout(async () => {
@@ -470,7 +561,15 @@ let currentUrl = window.location.href;
 const observer = new MutationObserver(() => {
   if (window.location.href !== currentUrl) {
     currentUrl = window.location.href;
-    console.log('URL changed, re-running auto-detect');
+    console.log('Jobstreet URL changed, re-running auto-detect');
+    
+    // Remove existing buttons and indicators
+    const existingButton = document.getElementById('jobstreet-manual-save-job-btn');
+    if (existingButton) existingButton.remove();
+    
+    const existingIndicator = document.getElementById('jobstreet-website-detector-indicator');
+    if (existingIndicator) existingIndicator.remove();
+    
     setTimeout(autoDetectAndExtract, 1000);
   }
 });

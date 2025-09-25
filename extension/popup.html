@@ -1,71 +1,317 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Job Application Tracker</title>
-  <link rel="stylesheet" href="popup.css">
+  <style>
+    body {
+      width: 450px;
+      min-height: 500px;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #333;
+    }
+
+    .header {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 20px;
+      text-align: center;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 600;
+      background: linear-gradient(45deg, #FF6B35, #0077b5);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .stats {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 15px;
+      gap: 10px;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 10px 15px;
+      border-radius: 10px;
+      text-align: center;
+      flex: 1;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-number {
+      font-size: 18px;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: #666;
+      margin: 2px 0 0 0;
+    }
+
+    .jobstreet-stat .stat-number {
+      color: #FF6B35;
+    }
+
+    .linkedin-stat .stat-number {
+      color: #0077b5;
+    }
+
+    .total-stat .stat-number {
+      color: #667eea;
+    }
+
+    .content {
+      padding: 15px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .platform-filter {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .filter-btn {
+      flex: 1;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.7);
+      color: #333;
+    }
+
+    .filter-btn.active {
+      background: rgba(255, 255, 255, 0.95);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .filter-btn.jobstreet.active {
+      background: #FF6B35;
+      color: white;
+    }
+
+    .filter-btn.linkedin.active {
+      background: #0077b5;
+      color: white;
+    }
+
+    .job-item {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      border-left: 4px solid #ddd;
+    }
+
+    .job-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .job-item.jobstreet {
+      border-left-color: #FF6B35;
+    }
+
+    .job-item.linkedin {
+      border-left-color: #0077b5;
+    }
+
+    .job-header {
+      display: flex;
+      justify-content: between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+
+    .job-title {
+      font-weight: 600;
+      font-size: 14px;
+      color: #333;
+      margin: 0;
+      flex: 1;
+      line-height: 1.4;
+    }
+
+    .platform-badge {
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 10px;
+      font-weight: bold;
+      margin-left: 8px;
+      flex-shrink: 0;
+    }
+
+    .platform-badge.jobstreet {
+      background-color: #FF6B35;
+      color: white;
+    }
+
+    .platform-badge.linkedin {
+      background-color: #0077b5;
+      color: white;
+    }
+
+    .job-company {
+      font-size: 13px;
+      color: #666;
+      margin: 4px 0;
+    }
+
+    .job-location {
+      font-size: 12px;
+      color: #888;
+      margin: 2px 0;
+    }
+
+    .job-date {
+      font-size: 11px;
+      color: #999;
+      margin-top: 8px;
+    }
+
+    .job-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .action-btn {
+      padding: 4px 8px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 11px;
+      transition: all 0.2s ease;
+    }
+
+    .view-btn {
+      background: rgba(102, 126, 234, 0.1);
+      color: #667eea;
+      flex: 1;
+    }
+
+    .view-btn:hover {
+      background: rgba(102, 126, 234, 0.2);
+    }
+
+    .delete-btn {
+      background: rgba(244, 67, 54, 0.1);
+      color: #f44336;
+      min-width: 60px;
+    }
+
+    .delete-btn:hover {
+      background: rgba(244, 67, 54, 0.2);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .empty-state h3 {
+      margin: 0 0 10px 0;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .empty-state p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    /* Status indicators */
+    .status-indicator {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 6px;
+    }
+
+    .status-applied { background-color: #4CAF50; }
+    .status-interview { background-color: #FF9800; }
+    .status-rejected { background-color: #f44336; }
+    .status-offer { background-color: #2196F3; }
+
+    /* Scrollbar styling */
+    .content::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .content::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+    }
+
+    .content::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 3px;
+    }
+
+    .content::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.5);
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <header class="header">
-      <h1>🎯 Job Tracker</h1>
-      <p class="subtitle">Track lamaran kerja Anda</p>
-    </header>
-    
+  <div class="header">
+    <h1>Job Application Tracker</h1>
     <div class="stats">
-      <div class="stat-item">
-        <span class="stat-number" id="totalApplications">0</span>
-        <span class="stat-label">Total Lamaran</span>
+      <div class="stat-card jobstreet-stat">
+        <p class="stat-number" id="jobstreet-count">0</p>
+        <p class="stat-label">JobStreet</p>
       </div>
-    </div>
-    
-    <div class="actions">
-      <button id="refreshBtn" class="btn btn-primary">
-        🔄 Refresh Data
-      </button>
-      <button id="exportBtn" class="btn btn-secondary">
-        📥 Export CSV
-      </button>
-      <button id="clearAllBtn" class="btn btn-danger">
-        🗑️ Hapus Semua
-      </button>
-    </div>
-    
-    <div class="search-container">
-      <input type="text" id="searchInput" placeholder="Cari perusahaan atau posisi..." class="search-input">
-    </div>
-    
-    <div class="applications-list" id="applicationsList">
-      <div class="loading" id="loading">
-        <div class="spinner"></div>
-        <p>Memuat data...</p>
+      <div class="stat-card linkedin-stat">
+        <p class="stat-number" id="linkedin-count">0</p>
+        <p class="stat-label">LinkedIn</p>
       </div>
-    </div>
-    
-    <div class="empty-state" id="emptyState" style="display: none;">
-      <div class="empty-icon">📝</div>
-      <h3>Belum ada lamaran tersimpan</h3>
-      <p>Kunjungi halaman Jobstreet dan klik tombol simpan untuk mulai tracking lamaran Anda!</p>
-    </div>
-    
-    <footer class="footer">
-      <p>v1.0 | Auto tracker untuk Jobstreet Indonesia</p>
-    </footer>
-  </div>
-  
-  <!-- Modal Konfirmasi -->
-  <div id="confirmModal" class="modal">
-    <div class="modal-content">
-      <h3>Konfirmasi</h3>
-      <p id="confirmMessage">Apakah Anda yakin?</p>
-      <div class="modal-actions">
-        <button id="confirmYes" class="btn btn-danger">Ya</button>
-        <button id="confirmNo" class="btn btn-secondary">Tidak</button>
+      <div class="stat-card total-stat">
+        <p class="stat-number" id="total-count">0</p>
+        <p class="stat-label">Total</p>
       </div>
     </div>
   </div>
-  
+
+  <div class="content">
+    <div class="platform-filter">
+      <button class="filter-btn active" data-platform="all">Semua</button>
+      <button class="filter-btn jobstreet" data-platform="jobstreet">JobStreet</button>
+      <button class="filter-btn linkedin" data-platform="linkedin">LinkedIn</button>
+    </div>
+
+    <div id="job-list">
+      <!-- Job items will be populated here -->
+    </div>
+
+    <div id="empty-state" class="empty-state" style="display: none;">
+      <h3>Belum Ada Data Lamaran</h3>
+      <p>Kunjungi halaman job di JobStreet atau LinkedIn dan lamar pekerjaan untuk mulai melacak aplikasi Anda secara otomatis!</p>
+    </div>
+  </div>
+
   <script src="popup.js"></script>
 </body>
 </html>
